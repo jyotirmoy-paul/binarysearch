@@ -14,14 +14,23 @@ class Playground extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kContentPadding),
       child: Center(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Wrap(
-            spacing: 10.0,
-            runSpacing: 10.0,
-            children: elements.map((e) => e.widget).toList(),
-          ),
-        ),
+        child: elements.isEmpty
+            ? Text(
+                'Tips:\n\nYou can either enter your own values or generate random values\n\nSlide over the title text to change the algorithm\n\nBinary Search, Linear Search & Jump Search',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: kGray,
+                ),
+              )
+            : SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Wrap(
+                  spacing: 10.0,
+                  runSpacing: 10.0,
+                  children: elements.map((e) => e.widget).toList(),
+                ),
+              ),
       ),
     );
   }

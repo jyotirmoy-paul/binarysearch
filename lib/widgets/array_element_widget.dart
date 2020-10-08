@@ -33,6 +33,7 @@ class ArrayElementWidgetState extends State<ArrayElementWidget> {
     /* change appropriate state */
     switch (state) {
       case ArrayElementState.Default:
+        _isDisabled = false;
         _backgroundColor = kLightGray;
         _borderColor = Colors.black;
         _textColor = Colors.black;

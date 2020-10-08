@@ -1,3 +1,4 @@
+import 'package:binarysearch/engine/algorithm_type.dart';
 import 'package:binarysearch/models/array_element.dart';
 import 'package:binarysearch/screens/main_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ListenableProvider<ValueNotifier<String>>(
-          // FIXME: REMOVE THIS BEFORE PRODUCTION
-          create: (_) => ValueNotifier<String>(
-              '15 17 9 98 02 -3 -45 221 -3 43 -34 3 534 7 45 34 22 33 98 75 632 41 55 69 99 88 73 10'),
+          create: (_) => ValueNotifier<String>(''),
         ),
         ListenableProvider<ValueNotifier<bool>>(
           create: (_) => ValueNotifier<bool>(true),
@@ -23,7 +22,11 @@ class MyApp extends StatelessWidget {
         ),
         ListenableProvider<ValueNotifier<List<ArrayElement>>>(
           create: (_) => ValueNotifier<List<ArrayElement>>([]),
-        )
+        ),
+        ListenableProvider<ValueNotifier<AlgorithmType>>(
+          create: (_) =>
+              ValueNotifier<AlgorithmType>(AlgorithmType.BinarySearch),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
