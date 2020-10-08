@@ -2,6 +2,7 @@ import 'package:binarysearch/engine/algorithm.dart';
 import 'package:binarysearch/engine/prepare_elements.dart';
 import 'package:binarysearch/models/array_element.dart';
 import 'package:binarysearch/screens/main_screen_components/playground.dart';
+import 'package:binarysearch/utils/alert.dart';
 import 'package:binarysearch/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +10,20 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
-  void _startAlgo(String inputString, int toSearch, bool autoSortFlag) {
-    Algorithm.prepare(
-      inputString,
-      toSearch,
-      autoSortFlag,
-    );
+  void _startAlgo(
+      List<ArrayElement> arr, int toSearch, BuildContext context) async {
+    bool found = await Algorithm.runBinarySearch(arr, toSearch);
+
+    if (found)
+      Alert.snackBar(
+        context,
+        '$toSearch Found',
+      );
+    else
+      Alert.snackBar(
+        context,
+        '$toSearch NOT Found',
+      );
   }
 
   @override
@@ -56,17 +65,18 @@ class MainScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kContentPadding),
           child: Consumer3<ValueNotifier<String>, ValueNotifier<int>,
-              ValueNotifier<bool>>(
-            builder: (_, vnArr, vnToSearch, vnAutoSortFlag, __) => IconButton(
+              ValueNotifier<List<ArrayElement>>>(
+            builder: (context, vnArr, vnToSearch, vnArrayElementsList, __) =>
+                IconButton(
               icon: const Icon(Icons.play_arrow),
               color: Colors.green,
               iconSize: 30.0,
               onPressed: (vnArr.value.isEmpty || vnToSearch.value == null)
                   ? null
                   : () => _startAlgo(
-                        vnArr.value,
+                        vnArrayElementsList.value,
                         vnToSearch.value,
-                        vnAutoSortFlag.value,
+                        context,
                       ),
             ),
           ),

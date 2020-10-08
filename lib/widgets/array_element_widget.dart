@@ -38,6 +38,10 @@ class ArrayElementWidgetState extends State<ArrayElementWidget> {
         _textColor = Colors.black;
         break;
       case ArrayElementState.Disabled:
+        // first make the element of default state then disable it
+        _backgroundColor = kLightGray;
+        _borderColor = Colors.black;
+        _textColor = Colors.black;
         _isDisabled = true;
         break;
       case ArrayElementState.MidState:

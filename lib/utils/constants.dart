@@ -12,6 +12,6 @@ const double kWidthFactor = 1.5;
 const Duration kStateChangeAnimationDuration =
     const Duration(milliseconds: 100);
 
-const Duration kAnimationDuration = const Duration(milliseconds: 400);
+const Duration kAnimationDuration = const Duration(milliseconds: 1000);
 
 const double kScaleIncrementFactor = 1.2;

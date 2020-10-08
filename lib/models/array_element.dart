@@ -19,6 +19,6 @@ class ArrayElement {
   Widget get widget => _widget;
   int get value => _value;
 
-  set elementState(ArrayElementState state) =>
+  set setElementState(ArrayElementState state) =>
       _key.currentState.updateState(state);
 }
