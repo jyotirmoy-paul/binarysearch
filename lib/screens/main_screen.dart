@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:binarysearch/engine/algorithm.dart';
@@ -22,6 +23,8 @@ class _MainScreenState extends State<MainScreen> {
   final TextEditingController _inputController = TextEditingController();
   final TextEditingController _searchInputController = TextEditingController();
 
+  Timer _timer;
+
   bool _isRunning = false;
   bool _isNew = true; // keeps track if elements are dirty or not
 
@@ -29,13 +32,13 @@ class _MainScreenState extends State<MainScreen> {
       List<ArrayElement> arr, int toSearch, BuildContext context) async {
     if (_isRunning) return;
 
-    if (!_isNew) {
+    if (!_isNew)
       /* if inside this -> means elements are dirty, need to put them to default */
       /* it may happen that user is running different algorithm on same set of data points */
       /* thus before running the algorithm gain, reset all the data states */
       for (var e in arr) e.setElementState = ArrayElementState.Default;
-      _isNew = false;
-    }
+
+    _isNew = false;
 
     setState(() {
       _isRunning = true;
@@ -45,7 +48,14 @@ class _MainScreenState extends State<MainScreen> {
       context,
       listen: false,
     ).value;
+
     bool found = false;
+
+    Provider.of<ValueNotifier<double>>(context, listen: false).value = 0.0;
+
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      Provider.of<ValueNotifier<double>>(context, listen: false).value += 0.10;
+    });
 
     switch (algorithmType) {
       case AlgorithmType.BinarySearch:
@@ -58,6 +68,8 @@ class _MainScreenState extends State<MainScreen> {
         found = await Algorithm.runJumpSearch(arr, toSearch);
         break;
     }
+
+    _timer.cancel();
 
     if (found)
       Alert.snackBar(
@@ -145,6 +157,7 @@ class _MainScreenState extends State<MainScreen> {
         },
       ),
       actions: [
+        /* show the element of interest (one searching for) */
         _isRunning
             ? Center(
                 child: Text(
@@ -157,6 +170,26 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               )
             : SizedBox.shrink(),
+
+        /* separator */
+        SizedBox(
+          width: kContentPadding,
+        ),
+        /* timer for algo */
+        Center(
+          child: Consumer<ValueNotifier<double>>(
+            builder: (_, valueNotifier, __) => Text(
+              '${valueNotifier.value.toStringAsFixed(1)}s',
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+
+        /* reset the stage */
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kContentPadding),
           child: IconButton(
@@ -183,6 +216,8 @@ class _MainScreenState extends State<MainScreen> {
             },
           ),
         ),
+
+        /* start the algorithm */
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kContentPadding),
           child: Consumer3<ValueNotifier<String>, ValueNotifier<int>,

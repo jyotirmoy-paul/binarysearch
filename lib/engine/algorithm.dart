@@ -5,14 +5,14 @@ import 'package:binarysearch/utils/constants.dart';
 import 'package:binarysearch/widgets/array_element_widget.dart';
 
 class Algorithm {
-  static void disableIndices(int start, int end, List<ArrayElement> arr) {
+  static void _disableIndices(int start, int end, List<ArrayElement> arr) {
     assert(start <= end);
 
     for (int i = start; i <= end; i++)
       arr[i].setElementState = ArrayElementState.Disabled;
   }
 
-  static void enableIndices(int start, int end, List<ArrayElement> arr,
+  static void _enableIndices(int start, int end, List<ArrayElement> arr,
       {ArrayElementState withState = ArrayElementState.Default}) {
     assert(start <= end);
 
@@ -53,7 +53,7 @@ class Algorithm {
         // proceed to check on the left sub array
 
         // show in UI -- disable all elements on the right side
-        disableIndices(mid, end, arr);
+        _disableIndices(mid, end, arr);
 
         // show in UI -- make start index a default state
         arr[start].setElementState = ArrayElementState.Default;
@@ -63,7 +63,7 @@ class Algorithm {
         // proceed to check on the right sub array
 
         // show in UI -- disable all elements on the left side
-        disableIndices(start, mid, arr);
+        _disableIndices(start, mid, arr);
 
         // show in UI -- make start index a default state
         arr[end].setElementState = ArrayElementState.Default;
@@ -114,11 +114,11 @@ class Algorithm {
       // jump ahead
       int newStart = start + jumpStep;
 
-      disableIndices(start, newStart - 1, arr);
+      _disableIndices(start, newStart - 1, arr);
       start = newStart;
 
       if (start >= arr.length) {
-        enableIndices(arr.length - jumpStep - 1, arr.length - 1, arr,
+        _enableIndices(arr.length - jumpStep - 1, arr.length - 1, arr,
             withState: ArrayElementState.MidState);
         return runLinearSearch(
             arr.sublist(arr.length - jumpStep - 1), toSearch);
@@ -129,7 +129,7 @@ class Algorithm {
     int e = start;
 
     // doing a linear search between s and (e+1)
-    enableIndices(s, e + 1, arr, withState: ArrayElementState.MidState);
+    _enableIndices(s, e + 1, arr, withState: ArrayElementState.MidState);
     return runLinearSearch(arr.sublist(s, e + 1), toSearch);
   }
 }

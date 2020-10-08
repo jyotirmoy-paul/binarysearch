@@ -27,6 +27,9 @@ class MyApp extends StatelessWidget {
           create: (_) =>
               ValueNotifier<AlgorithmType>(AlgorithmType.BinarySearch),
         ),
+        ListenableProvider<ValueNotifier<double>>(
+          create: (_) => ValueNotifier<double>(0.0),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
