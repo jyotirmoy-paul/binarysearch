@@ -1,4 +1,7 @@
 import 'package:binarysearch/engine/algorithm.dart';
+import 'package:binarysearch/engine/prepare_elements.dart';
+import 'package:binarysearch/models/array_element.dart';
+import 'package:binarysearch/screens/main_screen_components/playground.dart';
 import 'package:binarysearch/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,35 +19,26 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ListenableProvider<ValueNotifier<String>>(
-          create: (_) => ValueNotifier<String>(''),
-          lazy: false,
-        ),
-        ListenableProvider<ValueNotifier<bool>>(
-          create: (_) => ValueNotifier<bool>(true),
-          lazy: false,
-        ),
-        ListenableProvider<ValueNotifier<int>>(
-          create: (_) => ValueNotifier<int>(null),
-          lazy: false,
-        ),
-      ],
-      builder: (BuildContext context, _) => Scaffold(
-        appBar: _buildAppBar(),
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            _buildTopRow(context),
-            Expanded(
-              flex: 6,
-              child: Container(
-                color: kLightGray,
+    // FIXME: REMOVE THIS AFTER TESTING
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      PrepareElements.prepare(context);
+    });
+
+    return Scaffold(
+      appBar: _buildAppBar(),
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          _buildTopRow(context),
+          Expanded(
+            flex: 6,
+            child: Consumer<ValueNotifier<List<ArrayElement>>>(
+              builder: (_, valueNotifier, __) => Playground(
+                elements: valueNotifier.value,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -94,9 +88,12 @@ class MainScreen extends StatelessWidget {
             Expanded(
               flex: 15,
               child: TextField(
-                onChanged: (String value) =>
-                    Provider.of<ValueNotifier<String>>(context, listen: false)
-                        .value = value.trim(),
+                onChanged: (String value) {
+                  Provider.of<ValueNotifier<String>>(context, listen: false)
+                      .value = value.trim();
+
+                  PrepareElements.prepare(context);
+                },
                 style: const TextStyle(
                   fontSize: 20.0,
                 ),
@@ -114,6 +111,8 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             separator,
+
+            /* user input - integer to search */
             Expanded(
               child: TextField(
                 onChanged: (String value) =>
@@ -143,15 +142,20 @@ class MainScreen extends StatelessWidget {
               children: [
                 Consumer<ValueNotifier<bool>>(
                   builder: (_, valueNotifier, __) => CupertinoSwitch(
-                    onChanged: (newValue) => Provider.of<ValueNotifier<bool>>(
-                      context,
-                      listen: false,
-                    ).value = newValue,
+                    activeColor: Colors.redAccent,
+                    onChanged: (newValue) {
+                      Provider.of<ValueNotifier<bool>>(
+                        context,
+                        listen: false,
+                      ).value = newValue;
+
+                      PrepareElements.prepare(context);
+                    },
                     value: valueNotifier.value,
                   ),
                 ),
                 const SizedBox(height: 2.0),
-                Text('Auto Sort'),
+                Text('Auto-Sort'),
               ],
             ),
           ],
