@@ -143,6 +143,8 @@ class _MainScreenState extends State<MainScreen> {
         color: Colors.black,
         iconSize: 30.0,
         onPressed: () {
+          _isNew = true;
+
           // add random data
           int n = 20 + Random().nextInt(80);
           String inputString = '';
@@ -208,7 +210,13 @@ class _MainScreenState extends State<MainScreen> {
               Provider.of<ValueNotifier<int>>(context, listen: false).value =
                   null;
 
+              Provider.of<ValueNotifier<double>>(context, listen: false).value =
+                  0.0;
+
               PrepareElements.prepare(context);
+
+              _isNew = true;
+              _timer.cancel();
 
               setState(() {
                 _isRunning = false;

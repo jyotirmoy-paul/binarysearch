@@ -107,9 +107,14 @@ class Algorithm {
 
     int start = 0;
 
-    while (arr[start].value < toSearch) {
+    while (arr[start].value <= toSearch) {
       arr[start].setElementState = ArrayElementState.BoundaryState;
       await Future.delayed(kAnimationDuration);
+
+      if (arr[start].value == toSearch) {
+        arr[start].setElementState = ArrayElementState.MatchedState;
+        return true;
+      }
 
       // jump ahead
       int newStart = start + jumpStep;
@@ -128,8 +133,9 @@ class Algorithm {
     int s = start - jumpStep;
     int e = start;
 
-    // doing a linear search between s and (e+1)
-    _enableIndices(s, e + 1, arr, withState: ArrayElementState.MidState);
-    return runLinearSearch(arr.sublist(s, e + 1), toSearch);
+    // e ---> TODO: REMOVE
+    // doing a linear search between s and (e)
+    _enableIndices(s, e, arr, withState: ArrayElementState.MidState);
+    return runLinearSearch(arr.sublist(s, e), toSearch);
   }
 }
