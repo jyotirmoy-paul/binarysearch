@@ -1,10 +1,17 @@
 import 'dart:math';
 
+import 'package:binarysearch/engine/info/algorithm_info.dart';
+import 'package:binarysearch/engine/info/algorithm_info_helper.dart';
 import 'package:binarysearch/models/array_element.dart';
 import 'package:binarysearch/utils/constants.dart';
 import 'package:binarysearch/widgets/array_element_widget.dart';
+import 'package:flutter/cupertino.dart';
 
 class Algorithm {
+  BuildContext context;
+
+  Algorithm({@required this.context}) : assert(context != null);
+
   static void _disableIndices(int start, int end, List<ArrayElement> arr) {
     assert(start <= end);
 
@@ -20,7 +27,7 @@ class Algorithm {
   }
 
   /* implementation of binary search to search for the toSearch value in the array arr */
-  static Future<bool> runBinarySearch(
+  Future<bool> runBinarySearch(
     List<ArrayElement> arr,
     int toSearch,
   ) async {
@@ -77,29 +84,51 @@ class Algorithm {
     return false;
   }
 
-  /* implementation of linear search */
-  static Future<bool> runLinearSearch(
+  /*
+  * IMPLEMENTATION OF LINEAR SEARCH ALGORITHM
+  * */
+
+  Future<bool> runLinearSearch(
     List<ArrayElement> arr,
     int toSearch,
   ) async {
+    await AlgorithmInfoHelper.setInfo(
+      context,
+      LinearSearchAlgorithmInfo.algorithm(),
+    );
+
     for (int i = 0; i < arr.length; i++) {
       arr[i].setElementState = ArrayElementState.BoundaryState;
-      await Future.delayed(kAnimationDuration);
+
+      await AlgorithmInfoHelper.setInfo(
+        context,
+        LinearSearchAlgorithmInfo.comparingWith(i, arr[i].value, toSearch),
+      );
 
       if (arr[i].value == toSearch) {
         arr[i].setElementState = ArrayElementState.MatchedState;
+
+        await AlgorithmInfoHelper.setInfo(
+          context,
+          LinearSearchAlgorithmInfo.match(i, arr[i].value, toSearch),
+        );
+
         return true;
       }
 
       arr[i].setElementState = ArrayElementState.Disabled;
-      await Future.delayed(kAnimationDuration);
+
+      await AlgorithmInfoHelper.setInfo(
+        context,
+        LinearSearchAlgorithmInfo.notMatch(i, arr[i].value, toSearch),
+      );
     }
 
     return false;
   }
 
   /* implementation of jump search */
-  static Future<bool> runJumpSearch(
+  Future<bool> runJumpSearch(
     List<ArrayElement> arr,
     int toSearch,
   ) async {

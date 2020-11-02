@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:binarysearch/engine/algorithm.dart';
 import 'package:binarysearch/engine/algorithm_type.dart';
+import 'package:binarysearch/engine/info/algorithm_info.dart';
 import 'package:binarysearch/engine/prepare_elements.dart';
 import 'package:binarysearch/models/array_element.dart';
 import 'package:binarysearch/screens/main_screen_components/playground.dart';
@@ -28,8 +29,12 @@ class _MainScreenState extends State<MainScreen> {
   bool _isRunning = false;
   bool _isNew = true; // keeps track if elements are dirty or not
 
+  Algorithm _algorithm;
+
   void _startAlgo(
       List<ArrayElement> arr, int toSearch, BuildContext context) async {
+    if (_algorithm == null) _algorithm = Algorithm(context: context);
+
     if (_isRunning) return;
 
     if (!_isNew)
@@ -59,13 +64,13 @@ class _MainScreenState extends State<MainScreen> {
 
     switch (algorithmType) {
       case AlgorithmType.BinarySearch:
-        found = await Algorithm.runBinarySearch(arr, toSearch);
+        found = await _algorithm.runBinarySearch(arr, toSearch);
         break;
       case AlgorithmType.LinearSearch:
-        found = await Algorithm.runLinearSearch(arr, toSearch);
+        found = await _algorithm.runLinearSearch(arr, toSearch);
         break;
       case AlgorithmType.JumpSearch:
-        found = await Algorithm.runJumpSearch(arr, toSearch);
+        found = await _algorithm.runJumpSearch(arr, toSearch);
         break;
     }
 
@@ -82,9 +87,9 @@ class _MainScreenState extends State<MainScreen> {
         '$toSearch NOT Found',
       );
 
-    setState(() {
-      _isRunning = false;
-    });
+//    setState(() {
+//      _isRunning = false;
+//    });
   }
 
   @override
@@ -142,21 +147,23 @@ class _MainScreenState extends State<MainScreen> {
         icon: const Icon(Icons.add_box),
         color: Colors.black,
         iconSize: 30.0,
-        onPressed: () {
-          _isNew = true;
+        onPressed: _isRunning
+            ? null
+            : () {
+                _isNew = true;
 
-          // add random data
-          int n = 20 + Random().nextInt(80);
-          String inputString = '';
+                // add random data
+                int n = 20 + Random().nextInt(80);
+                String inputString = '';
 
-          for (int i = 0; i < n; i++)
-            inputString += '${Random().nextInt(1000)} ';
+                for (int i = 0; i < n; i++)
+                  inputString += '${Random().nextInt(1000)} ';
 
-          Provider.of<ValueNotifier<String>>(context, listen: false).value =
-              inputString.trim();
+                Provider.of<ValueNotifier<String>>(context, listen: false)
+                    .value = inputString.trim();
 
-          PrepareElements.prepare(context);
-        },
+                PrepareElements.prepare(context);
+              },
       ),
       actions: [
         /* show the element of interest (one searching for) */
@@ -216,7 +223,7 @@ class _MainScreenState extends State<MainScreen> {
               PrepareElements.prepare(context);
 
               _isNew = true;
-              _timer.cancel();
+              _timer?.cancel();
 
               setState(() {
                 _isRunning = false;
@@ -255,14 +262,24 @@ class _MainScreenState extends State<MainScreen> {
     final separator = const SizedBox(width: kContentPadding);
 
     return Expanded(
-      flex: 1,
+      flex: 2,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: kContentPadding),
         child: _isRunning
             ? Center(
-                child: Text(
-                  'Algorithm is running\nHere we can explain as the algorithm runs',
-                  textAlign: TextAlign.center,
+                child: Consumer<AlgorithmInfo>(
+                  builder: (_, AlgorithmInfo info, __) =>
+                      info.description == null
+                          ? SizedBox.shrink()
+                          : Text(
+                              info.description,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                 ),
               )
             : Row(

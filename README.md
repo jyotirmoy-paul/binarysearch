@@ -1,16 +1,7 @@
-# binarysearch
+# Searching Algorithms
 
-Visualisation of Binary Search
+[![Netlify Status](https://api.netlify.com/api/v1/badges/13b556bb-5b1f-4c81-a97d-638a2496c28c/deploy-status)](https://app.netlify.com/sites/searchalgorithms/deploys)
 
-## Getting Started
+Visualisation of searching algorithms - Linear, Binary & Jump Search
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Try-out yourself from [searchalgorithms](https://searchalgorithms.netlify.app)

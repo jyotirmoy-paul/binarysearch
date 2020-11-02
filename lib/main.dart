@@ -1,12 +1,13 @@
 import 'package:binarysearch/engine/algorithm_type.dart';
+import 'package:binarysearch/engine/info/algorithm_info.dart';
 import 'package:binarysearch/models/array_element.dart';
 import 'package:binarysearch/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(SearchingAlgorithmsApp());
 
-class MyApp extends StatelessWidget {
+class SearchingAlgorithmsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         ),
         ListenableProvider<ValueNotifier<double>>(
           create: (_) => ValueNotifier<double>(0.0),
+        ),
+        ListenableProvider<AlgorithmInfo>(
+          create: (_) => AlgorithmInfo(),
         ),
       ],
       child: MaterialApp(
